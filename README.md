@@ -7,7 +7,8 @@
 121 번 동적 계획법 알고리즘 문제(행렬 곱셈 문제) 풀다가 전혀 안되서 인터넷에서 찾아봤는데 그것도 이해 안되서 내일 다시 공부해야 할 것 같음.  
 아래는 오늘 푼 문제들 (모두 C언어 2단계임)
 
-# 01 : 1부터 n까지의 합에서 짝수만 더하는 재귀함수
+
+# C언어 2단계 - 01 : 1부터 n까지의 합에서 짝수만 더하는 재귀함수
 10까지의 짝수 합  
 = 10 + *(8 까지의 합)*   
 = 10 + (8 + *(6 까지의 합)*)  
@@ -36,13 +37,14 @@ int main() {
 }
 ```
 # 02 : 숫자 더하기 재귀함수
-목표 : 
+문제 : 
 ```
-1 = 1
-1 + (1 + 2) = 4
-1 + (1 + 2 + 3) = 10
+1               = 1
+1 + (1 + 2)     = 4
+1 + (1 + 2) + (1 + 2 + 3) = 10
 ...
 10까지 출력하기
+(정렬은 안했음)
 ```
 소스 : 
 ```cpp
@@ -74,7 +76,8 @@ int main() {
                     printf(" + ");
                 }
             }
-            // 1 = 1 출력
+            // 맨 첫 줄 출력할때의 if
+            // 좀 괴랄하긴 한데 되긴 된다
             else {
                 for (int k = 1; k < j + 1; ++k) {
                     p += k;
@@ -100,6 +103,10 @@ int main() {
  3  2  7  6 | 18
 ------------+---
 14 10 19 12 | 55
+
+     5  7  4  3
+->   6  1  8  3  } 의 배열을 만들어서 끝 행,열에 합을 출력하는 문제
+     3  2  7  6
 ```
 ```cpp
 #include <stdio.h>
@@ -132,8 +139,8 @@ int main() {
 }
 ```
 # 04 : 복리 계산
-백만원을 연 이율 6.4%로 3년간 복리로 예치했을때의 3년뒤 총 금액은?  
-공식 : (최초 예금액) * (1 + 이율) ^ 예치기간 = 총금액
+문제 : 백만원을 연 이율 6.4%로 3년간 복리로 예치했을때의 3년뒤 총 금액은?  
+공식 : `(최초 예금액) * (1 + 이율) ^ 예치기간 = 총금액 (기간은 월 단위)`
 
 ```cpp
 #include <stdio.h>
@@ -152,7 +159,8 @@ int main() {
     return 0;
 }
 ```
-# 05 : 두 점을 지나는 직선의 기울기와 y절편
+# 05 : 두 점을 지나는 직선의 기울기와 y절편을 구하라
+문제 : 구조체, 포인터를 활용해 두 점을 지나는 직선의 기울기, y절편을 구하는 함수 `f()`를 만들어라.
 ```cpp
 #include <stdio.h>
 
@@ -184,7 +192,8 @@ int main() {
     return 0;
 }
 ```
-# 06 : 두 행렬의 합
+# 06 : 두 행렬의 합 함수
+문제 : 두 행렬을 인수로 받아서 더하는 함수를 만들어라.  
 출력 : 
 ```
 a = 
@@ -207,26 +216,30 @@ a + b =
 ```
 소스 : 
 ```cpp
+// 06 : 두 행렬의 합을 계산하는 함수
+
 #include <stdio.h>
 
 #define ROW 4
 #define COL 3
 
-// 고정크기 배열은 이중포인터가 아니라서 그냥 1중(?) 포인터로 받음
-void addArray(int* a, int* b, int* result) {
-    for (int i = 0; i < ROW * COL; ++i) {
-        *(result + i) = *(a + i) + *(b + i);
-    }
-}
-
-void printArr(int* arr) {
-    for (int i = 0; i < ROW * COL; ++i) {
-        printf("%d ", *(arr + i));
-        if (i % COL == COL - 1) {
-            printf("\n");
+void addArray(int a[][COL], int b[][COL], int result[][COL]) {
+    for (int i = 0; i < ROW; ++i) {
+        for (int j = 0; j < COL; ++j) {
+            result[i][j] = a[i][j] + b[i][j];
         }
     }
 }
+
+void printArr(int arr[][COL]) {
+    for (int i = 0; i < ROW; ++i) {
+        for (int j = 0; j < COL; ++j) {
+            printf("%d ", arr[i][j]);
+        }
+        printf("\n");
+    }
+}
+
 
 int main() {
     int a[ROW][COL] = {{1, 2, 3}, {2, 3, 4}, {3, 4, 5}, {4, 5, 6}};
@@ -238,7 +251,9 @@ int main() {
     };
 
     printf("a = \n");
-    printArr(a);               // 배열 넘길땐 & 필요 없음, 경고 짜증나면 (int*)로 캐스팅
+    printArr(a);
+    printf("\n");
+
     printf("b = \n");
     printArr(b);
     printf("\n");
@@ -252,15 +267,13 @@ int main() {
 }
 ```
 # 07 : 최고 성적을 받은 학생은?
+문졔 : 07: 학생들의 이름과 영어,수학 성적으로 구성된 구조체를 만들고 그 중 최고 성적을 받은 학생을 출력  
 출력 : 
 ```
 English Highscore : John (100)
 Math Highscore : Park (90)
 ```
 ```cpp
-// 07: 학생들의 이름과 영어,수학 성적으로 구성된 구조체를 만들고
-// 그 중 최고 성적을 받은 학생을 출력
-
 #include <stdio.h>
 #include <string.h>
 
@@ -309,12 +322,13 @@ int main() {
     setData(70, 90, "Park", &studentArr[1]);
     setData(90, 80, "Kim", &studentArr[2]);
 
-
     compareScore(studentArr);
     return 0;
 }
 ```
 # 08 : 행열의 두 행을 서로 교체하는 함수
+문제 : 교체하고 싶은 행렬의 두 행을 인수로 받아 교체해주는 함수를 만들어라.  
+예시) 1, 2헹을 교체하고 싶다.
 ```
 원본
 1 1 1 
@@ -343,7 +357,7 @@ void swap(int a[][COL], int b[][COL], int x, int y) {
                 }
                 if (i == y - 1) {               // y행은 x행에 복사
                     b[x - 1][j] = a[i][j];
-                } else {
+                } else {                        // 아니면 그냥 그대로 복사
                     b[i][j] = a[i][j];
                 }
             }
@@ -380,7 +394,9 @@ int main() {
 }
 ```
 # 09 : 전치행렬 구하기 (transpose)
-1행은 1열이 되고, 2행은 2열이 되는 그런 행렬인가보다.
+1행은 1열이 되고, 2행은 2열이 되는 그런 행렬인가보다.  
+문제 : A행렬의 전치행렬을 B행렬에 복사해주는 프로그램을 만들어라.  
+\- 전치행렬의 예)  
 ```
 원본
 11
@@ -431,6 +447,7 @@ int main() {
 }
 ```
 # 10 : 20~30살 사이의 직원 찾기
+문제 : 직원 구조체를 만들고 직원 정보들 중에서 20~30살에 해당하는 직원의 정보를 출력해라.  
 출력 : 
 ```
 Name : Kim (20)
@@ -499,7 +516,7 @@ int main() {
     return 0;
 }
 ```
-# 11 : 8, 16진수 재귀함수로 출력하기
+# 11 : 10진수를 8, 16진수로, 재귀함수로 출력하기
 예시 : 
 ```
 octal(123)  
@@ -640,15 +657,27 @@ A, B, C, D, E 다섯개의 배열이 있고, 우리는 이 5개를 모두 곱했
 `k`는 어디서 묶기 시작할 것인지 알려준다.
 
 ![](https://imgur.com/fkLfeZY.jpeg)
-공식화 시키면 위와 같다. `m[i][j] = 0 (i == j)` 인 이유는 1번째 배열에서 1번째 배열 까지 곱하는 횟수는 0번이기 때문인 것과 같다.
+공식화 시키면 위와 같다. `m[i][j] = 0 (i == j)` 인 이유는 1번째 배열에서 1번째 배열 까지 곱하는 횟수는 0번이기 때문인 것과 같다. 왜 바로 이런 공식이 나왔는지 잘 모르겠으니 아래에 예시대로 차례차례 해보며 규칙을 찾아보자.
 
 ## 일단 해보기
 ![](https://imgur.com/xWZbkSE.jpg)
-이 문제는 bottom-up 방식으로 푼다. 작은 문제로 위로 올라가면서 큰 문제를 푸는 뭐 그런거 같았던듯. 
+이 문제는 bottom-up 방식으로 푼다. 작은 문제로 위로 올라가면서 큰 문제를 푸는 뭐 그런거 같았던듯.  
+1,2,3,4,5 단계를 살펴보면 k값의 범위가 바로 행렬을 어디서 묶을 건지에 대한 범위인 것을 알 수 있다.  
+예를 들면 `ABCDE` 다섯개를 곱할 때면 묶을 수 있는 경우의 수가
+```
+A (BCDE)   | k = 1
+(AB) (CDE) | k = 2
+(ABC) (DE) | k = 3
+(ABCD) E   | k = 4
+-> ∴ 1 ≤ k < 5
+1 = i 이고 5 = j 임을 알 수 있다.
+
+(ABCDE, 행렬이 5개 이고 이는 곳 1번째에서 5번째까지 곱하는 최소 곱셈 횟수 m[1][5]를 구하는 과정...)
+```
 ![](https://imgur.com/ieVigfR.jpeg)
 
 우리가 알고 싶은 `m[1][5]`를 알기 위해서는 `m[1][4]` 혹은 `m[2][5]`가 필요하다.  
-이런 식으로 계속 내려가다 보면 `m[1][2], m[2][3]...`을 구해놓으면 결국에는 m[1][5]를 푸는데 사용할 수 있다. 
+이런 식으로 계속 내려가다 보면 `m[1][2], m[2][3]...`을 구해놓으면 결국에는 m[1][5]를 푸는데 사용할 수 있다. (Dynamic Programming에서 memoization이라고 했던 방법같다.)
 > 여기서 맨 처음, 즉 m[1][1], m[2][2]...를 포함해서 구했는데 지금 보니 어짜피 0이니깐 넘기고 계산해도 되었었다...  
 
 ### `m[1][2]`의 계산 예시
@@ -811,12 +840,9 @@ k[1][5] = 1
 -> 따라서 A(((BC)D)E)) 순서대로 함.
 ```
 # 동적할당과 2차원배열과 메모리 주소...
->❗️틀린 정보를 포함하고 있을 수도 있습니다...❗️
+❗️**틀린** **정보를** **포함하고** **있을** **수도** **있습니다**❗️
 
-## 아래에서 다시 설명함. 여기는 아마도 틀린 말 하고 있을 듯
 동적할당된 2차원배열을 []를 안쓰고 그리고 반복문을 하나만 돌려서 출력하는 함수를 만들다가 막혀서 질문을 많이하다가 알게된 것을 정리한다.
-> 반복문 한개로는 절대 안되는 것 같다??... (사실 된다... 고정 크기 배열만) ~~그럼 안되는거잖아~~ㅖ
-
 
 ![](https://imgur.com/N9RHWPH.jpg)
 
@@ -847,22 +873,22 @@ arr2[2][2] : ...
 아직 내가 메모리에 빠삭하지는 않아서 그런지 아무튼  
 **동적할당**을 통해 배열을 선언할 때는 배열 요소 주소값이 **항상 연속적인 것은 아니다!** ~~근데 계속 행 넘어갈때만 8씩 늘고 평소에는 4씩 늘어간다 왜지~~
 
-의문이 든건 배열의 9개의 연속된 주소값이라면 `**(arr1 + i)`를 통해 i를 1씩 증가하면서 아홉번 출력하면 9개 요소를 전부 출력할 수 있지 않나 인데...
-> 사실은 이 표현은 틀린거다... 아래 참고  
+의문이 든건 고정크기 배열의 9개의 연속된 주소값이라면 `**(arr1 + i)`를 통해 i를 1씩 증가하면서 아홉번 출력하면 9개 요소를 전부 출력할 수 있지 않나 인데...
+> 2차원배열은 이중포인터니까 arr1[0][0]부터 한칸씩 올라가자...하는 생각에서 비롯된 것 같다...  
 
 돌려보면 **처음 세번은 각 행의 첫번째 요소만 출력되고 4번째 이후로는 쓰레기값이 나온다.**  
-해결법은 반복문을 두번 돌려서
-```cpp
-for (int i = 0; i < 3; ++i) {
-    for (int j = 0; j < 3; ++j) {
-        printf("%d ", *(*arr1 + i) + j);
-                      // --------   --
-                      //i 번째 행   j번째 요소
-    }
-    printf("\n");
-}
-```
-의 형식으로 돌리면 된다. ` *(*arr1 + i) + j)`라는 표현이 많이 괴랄하므로 그냥 `arr1[i][j]`를 이용하도록 하자(?)  
+> 해결법은 반복문을 두번 돌려서
+> ```cpp
+> for (int i = 0; i < 3; ++i) {
+>     for (int j = 0; j < 3; ++j) {
+>         printf("%d ", *(*(arr1 + i) + j));
+>                       // --------   --
+>                       //i 번째 행   j번째 요소
+>     }
+>     printf("\n");
+> }
+> ```
+> 의 형식으로 돌리면 된다. ` *(*(arr1 + i) + j)`라는 표현이 많이 괴랄하므로 그냥 `arr1[i][j]`를 이용하도록 하자(?)  
 ## 고정크기 배열과 동적할당 배열
 ### 1. 고정크기 배열
 ![](https://imgur.com/CLS3hQi.jpg)
@@ -904,12 +930,14 @@ printArray(arr1);
 > `* 연산자`의 우선순위 때문에 우선은,  
 > 1. `*arr1` = arr1[0]의 주소 = arr1[0][0]의 주소
 > 2. `*arr1 + i` = arr1[0][0]의 주소부터 부터 한칸씩 올라가는 주소 (총 9번 이동)
-> 3. `*(*arr1 + i)` = 2번의 주소에 들어있는 값  
+> 3. `*(*arr1 + i)` = 2번의 주소에 들어있는 값    
+> 
+> 라고 생각되어 진다..
 
 이런 방식으로 진행되어 반복문 하나로 배열을 출력할 수 있다.  
 ~~더럽게 복잡하니깐 그냥 편하게 for문 두번 쓰자.~~
 ### 참고 : 2차원배열을 함수인수로 넘기려면...
-> 이런식으로 매개뱐수를 `array는 여러개의 COLUMN개짜리 배열을 묶어둔 것의 포인터`로 넘기던가 ~~뭔 소리야~~  
+> 이런식으로 매개변수를 `array는 여러개의 COLUMN개짜리 배열을 묶어둔 것의 포인터`로 넘기던가 ~~뭔 소리야~~  
 > 즉 `여러개의 COLUMN개의 1차원배열을 묶어둔 것중의 첫번째 배열의 주소 = 2차원배열의 맨 처음 요소의 주소`을 뜻하는 듯?
 > ```cpp
 > TYPE f(int (*array)[COLUMN]){...};
@@ -917,7 +945,7 @@ printArray(arr1);
 > 아래 방식으로 적는다. **위의 방법이 정석**이고,  
 > 아래의 방법은 표기만 배열같은 것이지, 위의 표기와 같은 의미이다. 어짜피 배열을 넣어서 넘긴다 하더라도 컴파일러가 보면 배열은 곧 배열의 첫번째 요소를 가르키는 포인터와 같아서 이나저나 같다.
 > ```cpp
-> // ROW는 안써도 됨
+> // ROW는 써도되고 안써도 됨
 > TYPE f(int array[ROW][COLUMN]){...};
 > ```
 > 호출시에는 그냥 배열 이름만 넘기면 뚝딱
@@ -1004,6 +1032,922 @@ void printArray2(int** arr) {
 > `*(*(arr + i) + j)`의 의미 (위에 그림 참조)
 > 1. `*(arr + i)` : i번째 행의 주소 (100, 108, 116번지)
 > 2. `*(arr + i) + j` : i번째 행의 j번째 열의 주소 (200, 204, 208 / 250, 254, 258 번지)
-> 3. `*(*(arr + i) + j)` : 위 2번 주소의 값
+> 3. `*(*(arr + i) + j)` : 위 2번 주소 안의 값
 
 정도 되시겠다. ~~그니깐 제발 편하게 arr[i][j] 쓰자~~
+
+# 코딩캠프 마지막 날
+오늘은 앞으로 다시 가서 도전해 볼 만한 문제들 풀다가 연결리스트로 마무리했다. (역시 C언어 2단계)
+
+# 55 : 동적할당을 이용하여, 단어 목록
+문제 : 입력 받을 단어의 개수를 먼저 받고, 그만큼 동적할당한다. 그리고 40문자 이내의 단어들을 입력받아, 단어들을 출력하고 그리고 그중에서 가장 짧은 단어와 긴 단어를 출력한다.
+
+출력 : 
+```
+How many words? : 5
+> 1) Enter 5 words : love
+> 2) Enter 5 words : Apple
+> 3) Enter 5 words : peach
+> 4) Enter 5 words : Hotdog
+> 5) Enter 5 words : Pizzaaaa 
+
+<Your Input>
+[0] : love
+[1] : Apple
+[2] : peach
+[3] : Hotdog
+[4] : Pizzaaaa
+
+> Longest Word : Pizzaaaa
+> Shortest Word : love
+```
+
+소스 : 
+```cpp
+// 55 : 입력 받을 단어의 개수를 먼저 받고, 그만큼 동적할당한다
+// 그리고 40문자 이내의 단어들을 입력받아, 단어들을 출력하고
+// 그리고 그중에서 가장 짧은 단어와 긴 단어를 출력
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <strings.h>
+#define MAX 40
+
+int main() {
+    int wordCnt;
+    int lenMax, lenMin;
+    int idxMax, idxMin;
+    printf("How many words? : ");
+    scanf("%d", &wordCnt);
+
+    char** word = (char**)malloc(wordCnt * sizeof(char*));
+    for (size_t i = 0; i < wordCnt; ++i) {
+        word[i] = (char*)calloc(MAX, sizeof(char));
+    }
+
+    for (size_t i = 0; i < wordCnt; ++i) {
+        char inputWord[MAX];
+        printf("> %d) Enter %d words : ", i + 1, wordCnt);
+        scanf("%s", inputWord);
+        strcpy(word[i], inputWord);
+        // printf("\n");
+    }
+
+    lenMax = strlen(word[0]);
+    lenMin = strlen(word[0]);
+
+    printf("\n<Your Input>\n");
+
+    int len;
+    for (size_t i = 0; i < wordCnt; ++i) {
+        len = strlen(word[i]);
+        if (len >= lenMax) {
+            lenMax = len;
+            idxMax = i;
+        }
+        if (len <= lenMin) {
+            lenMin = len;
+            idxMin = i;
+        }
+        printf("[%d] : %s\n", i, word[i]);
+    }
+    printf("\n> Longest Word : %s\n", word[idxMax]);
+    printf("> Shortest Word : %s\n", word[idxMin]);
+
+    return 0;
+}
+```
+# 63 : 두 배열의 병합 후 정렬
+문제 : 두 배열 a[5], b[5]를 병합하고 정렬하여 c[10]에 담는 프로그램 만들기  
+출력 : 
+```
+a[5] : 1 2 3 7 8 
+b[5] : 4 5 6 7 10 
+> c[10] : 1 2 3 4 5 6 7 7 8 10   
+```
+소스 : 
+```cpp
+//  63 : 정렬이 되어 있는 두개의 배열 a[5], b[5]를 받아서
+// 병합+정렬한 배열 c를 출력하는 프로그램
+
+#include <stdio.h>
+
+void merge(int a[], int b[]) {
+    int aCnt = 0, bCnt = 0;
+    int* pa = a;
+    int* pb = b;
+    int c[10];
+
+    for (size_t i = 0; i < 10; ++i) {
+        // a,b 중 한 쪽을 다 담기 전까지는
+        // 둘 중 작은 값부터 차례로 c에 담음
+        if (aCnt != 5 && bCnt != 5) {
+            if (*pa < *pb) {
+                c[i] = *pa;
+                ++aCnt;
+                ++pa;
+            } else if (*pb <= *pa) {
+                c[i] = *pb;
+                ++bCnt;
+                ++pb;
+            }
+        }
+        // a, b 중 한쪽을 다 c에 담아서 끝난 경우
+        // 나머지 배열의 나머지 요소들은 c에 차례로 담음
+        else {
+            if (aCnt == 5) {
+                c[i] = *pb;
+                ++pb;
+            } else {
+                c[i] = *pa;
+                ++pa;
+            }
+        }
+    }
+
+    printf("> c[10] : ");
+    for (size_t i = 0; i < 10; ++i) {
+        printf("%d ", c[i]);
+    }
+}
+
+int main() {
+    int a[5] = {1,2,3,7,8};
+    int b[5] = {4,5,6,7,10};
+
+    printf("a[5] : ");
+    for (int i = 0; i < 5; ++i) {
+        printf("%d ", a[i]);
+    }
+    printf("\nb[5] : ");
+    for (int i = 0; i < 5; ++i) {
+        printf("%d ", b[i]);
+    }
+    printf("\n");
+
+    merge(a, b);
+
+    return 0;
+}
+```
+
+# 90 : 문장의 문자수와 단어수
+문제 : 문장을 입력받고, 문자수와 단어수를 파악해서 출력해라  
+근데 이거 공백문자도 문자수에 포함되는거인지는 몰라서 일단 공백문자 포함된 개수로 셌다.
+
+출력 : 
+```
+Enter sentence : I love C Language!!
+문자 수 : 19    단어 수 : 4
+```
+
+소스 : 
+```cpp
+// 90 : 문장을 입력받으면 문자수와 단어수를 파악하는 프로그램을 포인터로 작성
+
+#include <stdio.h>
+#define MAX 100
+
+int countLetter(char* s) {
+    int count = 0;
+    char* pCount = s;
+    while (*pCount != '\n') {
+        ++count;
+        ++pCount;
+    }
+
+    return count;
+}
+
+int countWord(char* s) {
+    int count = 0;
+    char* pCount = s;
+
+    if (*s != ' ') {
+        ++count;
+    }
+
+    while (*pCount != '\0') {
+        if (*pCount == ' ') {
+            ++count;
+        }
+        ++pCount;
+    }
+
+    return count;
+}
+
+int main() {
+    int letterCount, wordCount;
+    char s[MAX];
+    printf("Enter sentence : ");
+    fgets(s, sizeof(s), stdin);
+
+    letterCount = countLetter(s);
+    wordCount = countWord(s);
+
+    printf("문자 수 : %d\t단어 수 : %d\n", letterCount, wordCount);
+
+    return 0;
+}
+```
+
+# 91 : 문장을 단어단위로 거꾸로 출력
+문제 : 문장을 입력받아 단어단위로 역순으로 출력해라.
+
+출력 : 
+```
+Enter sentence : I love Computer Science !!!
+!!! Science Computer love I
+```
+
+소스 : 
+```cpp
+// 91 : 문장을 받아서 단어 단위로 역순으로 출력하는 프로그램
+
+#include <stdio.h>
+#include <stdlib.h>
+#define MAX 100     // 문장 최대 길이
+
+// counts letter from sentence *s
+// = strlen?
+int countLetter(char* s) {
+    int count = 0;
+    char* pCount = s;
+    while (*pCount != '\n') {
+        ++count;
+        ++pCount;
+    }
+
+    return count;
+}
+
+// 문장 속 단어들을 역순으로 출력하는 함수.
+void reverse(char* s) {
+    char* p = s;
+    int space = 0;
+    int len = countLetter(s);
+
+    // (문장길이 + 1)짜리 배열에서 
+    // 띄어쓰기와 마지막 종결문자가 있는 부분을 1로 마킹
+    // 나머지는 0으로 마킹해두는 배열
+    int* spacePos = (int*)calloc(len + 1, sizeof(int));
+
+    for (size_t i = 0; i < len + 1; ++i) {
+        if (*(p + i) == ' ' || *(p + i) == 10) {
+            spacePos[i] = 1;
+        }
+    }
+
+    // ex) I Love You\n
+    //     01000010001
+    // 위의 배열에서 처음으로 발견한 지점에서 "10"이 붙어 있으면 거기부터
+    // 다음 1 나올때까지 한 단어 출력
+    // 이렇게 역순으로 진행하고
+    // 맨 처음 단어같은 경우 두번째 if문의 조건으로 걸러서 첫 단어도 출력하게함
+
+    for (size_t i = len; i > 0; --i) {
+        if (spacePos[i] == 0 && spacePos[i - 1] == 1) {
+            int j = i;
+            while (spacePos[j] != 1) {
+                printf("%c", s[j]);
+                ++j;
+            }
+            printf(" ");
+        }
+        if (i == 1 && !(spacePos[0] && spacePos[1])) {
+            int j = i - 1;
+            while (spacePos[j] != 1) {
+                printf("%c", s[j]);
+                ++j;
+            }
+            printf("\n");
+        }
+    }
+}
+
+int main() {
+    char s[MAX];
+    printf("Enter sentence : ");
+    fgets(s, sizeof(s), stdin);
+
+    reverse(s);
+
+    return 0;
+}
+```
+
+# 101 : 행맨 게임 (일단 coino.h 없이...) -> 구현 실패
+본인은 맥-북을 쓰고있기 때문에 UNIX 시스템에서는 conio.h 따위는 쓸 수 업따...  
+문제 : 행맨 게임을 만들어라. 15회 이내 도전으로 단어를 맞추면 우승이다. ~~정답은 concatenation 이다.~~
+
+출력 : 
+```
+ count : 7
+c o n c _ t _ n _ t i o n 
+Enter character guess : 
+(진행...)
+ count : 23
+Answer : concatenation
+You Lose!!
+```
+
+소스 : 
+```cpp
+// 101 : 행맨 게임
+// 15번 이하 횟수로 맞추면 우승, 단어를 추리할때마다 횟수 +1
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int main() {
+    const char answer[] = "concatenation";
+    int len = sizeof(answer) - 1;
+
+    // 문자를 말했을 때 그 문자가 정답에 포함되어있으면
+    // 해당 문자의 위치의 배열 값을 0에서 1로 바꿈
+    int* hMan = (int*)calloc(len - 1, sizeof(int));
+
+    int cnt = 0;
+    int result = 0;
+
+    while (result != len) {
+        result = 0;
+        for (size_t i = 0; i < len; ++i) {
+            result += hMan[i];
+        }
+
+        printf("count : %d\n", cnt);
+
+        if (result == len) {
+            printf("Answer : %s\n", answer);
+            if (cnt <= 15) {
+                printf("You Win!!\n");
+            } else {
+                printf("You Lose!!\n");
+            }
+            return 0;
+        }
+
+        for (size_t i = 0; i < len; ++i) {
+            if (!hMan[i]) {
+                printf("_ ");
+            } else {
+                printf("%c ", answer[i]);
+            }
+        }
+
+
+        printf("\n");
+        printf("Enter character guess : ");
+        char ch;
+        ch = getchar();         // 일단 여기서 문자를 단 한개식 받지 못하고
+        getchar();              // \n이 딸려와서 받는게 큰 문제이다....
+        ++cnt;
+
+        for (size_t i = 0; i < len; ++i) {
+            if (answer[i] == ch && ch != '\0') {
+                hMan[i] = 1;
+            }
+        }
+
+        fflush(stdout);         // 출력 버퍼 플러시 한다는게 아직도 뭔 뜻인지 모르겠다...
+        system("clear");
+    }
+
+    return 0;
+}
+```
+
+# 106 : 파일 입출력 + 구조체
+문제 : 106 : data.txt에서 정보를 불러와서 각 학생들의 두 점수의 합을 맨 마지막 열에 출력하고, 앞 열들은 data.txt랑 똑같이 출력해보자  
+사실 구조체 써야되는지 모르겠다... 파일 IO 다 까먹어서 일단 인터넷 도움받아 구현함
+
+data.txt 내용
+```
+1 Hong 30.3 40.5
+2 Lim 28.3 37.5
+3 Jang 32.5 77.3
+4 Lee 67.2 39.9
+5 Park 77.8 67.4
+6 Jeon 22.4 37.5
+```
+출력 : 
+```
+Successfully read file!
+1  Hong 30.3 40.5  70.8
+2   Lim 28.3 37.5  65.8
+3  Jang 32.5 77.3 109.8
+4   Lee 67.2 39.9 107.1
+5  Park 77.8 67.4 145.2
+6  Jeon 22.4 37.5  59.9
+```
+
+소스 : 
+```cpp
+// 106 : data.txt에서 정보를 불러와서 각 학생들의 두 점수의
+// 합을 맨 마지막 열에 출력하고, 앞 열들은 data.txt랑 똑같이 출력해보자
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <strings.h>
+
+#define DATA "data.txt"
+#define MAX 20
+
+typedef struct _Student {
+    int idx;
+    char name[5];
+    float score1;
+    float score2;
+} Student;
+
+int main() {
+    FILE* fp;
+    fp = fopen(DATA, "r");
+
+    if (fp == NULL) {
+        printf("Error reading file!\n");
+        exit(EXIT_FAILURE);
+    } else {
+        printf("Successfully read file!\n");
+    }
+
+
+    char buffer[MAX];
+
+    // feof(): 파일 끝에 도착함 = nonzero 리턴
+    //         아직 안 도착함   = 0 리턴
+    while (!feof(fp)) {
+        Student s;
+        fscanf(fp, "%d %s %f %f", &s.idx, s.name, &s.score1, &s.score2);
+        printf("%d %5s %.1f %.1f %5.1f\n",
+        s.idx, s.name, s.score1, s.score2, s.score1 + s.score2);
+    }
+
+    fclose(fp);
+    return 0;
+}
+```
+
+# 대망의 연결리스트 (한방향 연결리스트) - 49 : 연결리스트와 난수
+문제 풀 것 찾다가 연결리스트 다루는 게 있어서 잠깐 공부해서 풀어보았다. 생각보다 간단해서 재밌었다.
+
+문제 : 연결리스트를 구현하고 30개의 난수를 리스트에 넣어 합계와 평균을 계산해라
+
+출력 : 
+```
+HEAD - 79 - 13 - 61 - 70 - 23 - 4 - 50 - 35 - 32 - 93 - TAIL
+Sum : 460 Avg : 46.0
+```
+소스 : 
+```cpp
+// 49 : 정수를 저장할 수 있는 연결리스트를 만들고
+// 30개의 난수를 저장하고, 걔네들의 합과 평균을 구하시오.
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+#define MAX 10
+
+typedef struct _Node {
+        int data;               // 리스트의 각 노드가 가진 데이터
+        struct _Node* next;     // 다음 노드를 가르키는 부분
+} Node;
+
+// appends at the last node : 맨 뒤에 새로운 노드를 추가한다
+void listAppend(Node* list, int data) {
+    // 인수로 받은 리스트를 참조, 현위치를 나타내는 노드 포인터
+    Node* current = list;
+
+    // 다음 노드가 비어 있을 때까지 리스트를 따라 포인터를 한칸씩 이동
+    while (current->next != NULL) {
+        current = current->next;
+    }
+
+    // 그러고 나서 맨뒤에 새로운 노드 생성
+    Node* newNode = (Node*)malloc(sizeof(Node));
+    newNode->data = data;
+    newNode->next = NULL;
+
+    // 현재위치의 노드 -> 새로운 노드 -> NULL
+    // 이런 방법으로 노드를 연결함
+    current->next = newNode;
+}
+
+// prints list
+void listPrint(Node* list) {
+    Node* current = list->next;
+    
+    printf("HEAD - ");
+
+    // 노드가 비어있을 때 까지 리스트의 노드를 하나씩 프린트
+    while (current != NULL) {
+        printf("%d - ", current->data);
+        current = current->next;
+    }
+    printf("TAIL\n");
+}
+
+// 리스트의 값들의 합
+int listSum(Node* list) {
+    int sum = 0;
+    Node* current = list->next;
+    while (current != NULL) {
+        sum += current->data;
+        current = current->next;
+    }
+    return sum;
+}
+
+// 리스트의 값들의 평균
+double listAvg(Node* list) {
+    int sum = listSum(list);
+
+    int len = 0;
+    Node* current = list->next;
+
+    while (current != NULL) {
+        ++len;
+        current = current->next;
+    }
+    return (sum * 1.0 / len);
+}
+
+// free() list : 동적할당 할 때에는 free()를 잊지 말자... GC도 없는 C언어...
+void listFree(Node* list) {
+    Node* current = list;
+    Node* temp;
+
+    while (current != NULL) {
+        temp = current->next;
+        free(current);
+        current = temp;
+    }
+}
+
+int main() {
+    Node* list1;
+    list1 = (Node*)malloc(sizeof(Node));
+
+    srand((unsigned int)time(NULL));
+
+    for (size_t i = 0; i < MAX; ++i) {
+        int rNum = rand() % 100;
+        listAppend(list1, rNum);
+    }
+
+    listPrint(list1);
+
+    printf("Sum : %d Avg : %3.1lf\n", listSum(list1), listAvg(list1));
+
+    listFree(list1);
+    return 0;
+}
+```
+
+이 문제를 풀 때에는 헤더 노드를 딱히 만들지 않고 바로 리스트가 시작되게끔 구현했다.
+> ![](https://imgur.com/4Lzh975.jpg)
+> 가장 기본적인 연결 리스트는 이렇게 생겼다.
+
+# 115 : 연결리스트를 활용한 다항식 문제
+- 문제 1 : 다항식에 값을 대입했을 때 결과를 계산하는 함수를 만들고 출력하시오.  
+- 문제 2 : 다항식을 더하는 소스코드를 제공했으니, 이를 활용하여 다항식을 곱하는 프로그램도 만들어보자.  
+
+위에서 풀었던 것과는 다르게 헤더 노드와 그냥 노드를 구분해서 구조체를 만들었다.  
+출력 :
+```
+<eq1 생성>
+첫 항의 차수를 입력하세요 : 3
+3차항의 계수 입력 : 4
+2차항의 계수 입력 : -3
+1차항의 계수 입력 : 2
+0차항의 계수 입력 : 1
+다항식 생성완료!
+
+<eq2 생성>
+첫 항의 차수를 입력하세요 : 2
+2차항의 계수 입력 : -3
+1차항의 계수 입력 : 5
+0차항의 계수 입력 : 3
+다항식 생성완료!
+
+> eq1 = 4x^3 -3x^2 + 2x^1 + 1
+
+> eq2 = -3x^2 + 5x^1 + 3
+
+x = 2.00, eq1(x) = 25.00            // 문제 1에 해당
+eq1 + eq2 = 4x^3 -6x^2 + 7x^1 + 4   // 문제 2에 주어진 소스코드
+
+ // 주어진 소스를 활용해 다항식의 곱셈를 얻음
+eq1 x eq2 = -12x^5 + 29x^4 -9x^3 -2x^2 + 11x^1 + 3 
+```
+
+소스 : 
+```cpp
+// 115-1 : 다항식에 값을 대입했을 때 결과를 계산하는 함수를 만들고 출력하시오
+// 1번 문제도 연결리스트에 일단 다항식을 저장해야하나봄
+
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct _Node {
+        int coef;  // 계수
+        int exp;   // 지수
+        struct _Node* next;
+} Node;
+
+// 지금보니 이름을 헤더랑 관련있는 거로 짓는게 나았을지도...
+// 헤더 노드이다.
+typedef struct _LinkedList {
+        int size;
+        Node* next;
+} LinkedList;
+
+// 연결리스트(의 헤더)를 생성해서 리턴한다.
+LinkedList* listCreate() {
+    LinkedList* list = (LinkedList*)malloc(sizeof(LinkedList));
+    list->size = 0;
+    list->next = NULL;
+
+    return list;
+}
+
+// 다항식 (= 연결리스트)의 맨 뒤에 새로운 항(노드)를 추가한다
+// 항이 추가될 다항식, 계수, 지수를 매개변수로 쓴다.
+void polyAppend(LinkedList* list, int coef, int exp) {
+    Node* newNode = (Node*)malloc(sizeof(Node));
+
+    newNode->coef = coef;
+    newNode->exp = exp;
+    newNode->next = NULL;
+
+    if (list->next == NULL) {
+        list->next = newNode;
+    } else {
+        Node* cur = list->next;
+
+        while (cur->next != NULL) {
+            cur = cur->next;
+        }
+        cur->next = newNode;
+    }
+
+    // 새로운 항이 추가되었으니 항의 개수 + 1
+    list->size++;
+}
+
+// 다항식을 이쁘게 뽑아주는 함수
+void polyPrint(LinkedList* list) {
+    Node* cur = list->next;
+
+    while (cur != NULL) {
+        if (cur->exp == 0) {
+            printf("%d", cur->coef);
+        } else {
+            if (cur->coef == 1) {
+                printf("x^%d", cur->exp);
+            } else {
+                printf("%dx^%d", cur->coef, cur->exp);
+            }
+        }
+        cur = cur->next;
+        if (cur != NULL) {
+            if (cur->coef >= 0) {
+                printf(" + ");
+            } else {
+                printf(" ");
+            }
+        }
+    }
+    printf("\n\n");
+}
+
+// 다항식에 x 값을 넣었을 때의 계산값 리턴
+double polyCalc(LinkedList* list, double x) {
+    double calc = 0;
+
+    Node* cur = list->next;
+    while (cur != NULL) {
+        calc += cur->coef * pow(x, (double)cur->exp);
+        cur = cur->next;
+    }
+
+    return calc;
+}
+
+// 다항식을 만들어줌
+// polyAppend() 함수를 이용하여 다항식을 주루륵 만들어준다
+// 리스트 생성과는 다른 의미다!
+void equationCreate(LinkedList* list) {
+    int firstExp;
+    printf("첫 항의 차수를 입력하세요 : ");     // 첫 항의 차수가 곧 항의 개수
+    scanf("%d", &firstExp);
+
+    for (int i = firstExp; i >= 0; --i) {
+        int coefInput;
+        printf("%d차항의 계수 입력 : ", i);
+        scanf("%d", &coefInput);
+
+        polyAppend(list, coefInput, i);
+    }
+    printf("다항식 생성완료!\n\n");
+}
+
+// 두 다항식을 더하여 결과값의 다항식을 리턴한다.
+LinkedList* polyAdd(LinkedList* polyA, LinkedList* polyB) {
+    LinkedList* resultPoly = listCreate();
+
+    Node* curA = polyA->next;
+    Node* curB = polyB->next;
+
+    int sum;
+    while (curA && curB) {
+        if (curA->exp == curB->exp) {
+            sum = curA->coef + curB->coef;
+            if (sum != 0) {
+                polyAppend(resultPoly, sum, curA->exp);
+            }
+            curA = curA->next;
+            curB = curB->next;
+        } else if (curA->exp > curB->exp) {
+            polyAppend(resultPoly, curA->coef, curA->exp);
+            curA = curA->next;
+        } else {
+            polyAppend(resultPoly, curB->coef, curB->exp);
+            curB = curB->next;
+        }
+    }
+
+    while (curA != NULL) {
+        polyAppend(resultPoly, curA->coef, curA->exp);
+        curA = curA->next;
+    }
+    while (curB != NULL) {
+        polyAppend(resultPoly, curB->coef, curB->exp);
+        curB = curB->next;
+    }
+
+    return resultPoly;
+}
+
+// 두 다항식을 곱하여 결과값의 다항식을 리턴한다.
+LinkedList* polyMult(LinkedList* polyA, LinkedList* polyB) {
+    int multCnt = polyA->next->exp + 1;
+    int coef, exp;
+    LinkedList* temp[multCnt];
+    LinkedList* result;
+
+    Node* curA = polyA->next;
+    Node* curB, *curTemp;
+
+    for (size_t i = 0; i < multCnt; ++i) {
+        temp[i] = listCreate();
+        curB = polyB->next;
+        curTemp = curB;
+        for (size_t j = 0; j < polyB->size; ++j) {
+            coef = curA->coef * curTemp->coef;
+            exp = curA->exp + curTemp->exp;
+            polyAppend(temp[i], coef, exp);
+
+            curTemp = curTemp->next;
+            
+        }
+        curA = curA->next;
+    }
+
+    result = temp[0];
+    for (size_t i = 1; i < multCnt; ++i) {
+        result = polyAdd(result, temp[i]);
+    }
+
+    return result;
+}
+
+// 다항식 free()
+void listFree(LinkedList* list) {
+    Node* temp;
+    Node* cur = list->next;
+
+    while (cur != NULL) {
+        temp = cur->next;
+        free(cur);
+        cur = temp;
+    }
+}
+
+int main() {
+    LinkedList* eq1, *eq2;
+
+    // 계산 결과를 반환하는 함수의 원리 덕분에
+    // 이 둘은 리스트 생성함수를 안돌려도 됨
+    LinkedList* sumEq, *multEq;
+
+    eq1 = listCreate();
+    eq2 = listCreate();
+
+    printf("<eq1 생성>\n");
+    equationCreate(eq1);
+    printf("<eq2 생성>\n");
+    equationCreate(eq2);
+
+    printf("> eq1 = ");
+    polyPrint(eq1);
+
+    printf("> eq2 = ");
+    polyPrint(eq2);
+
+    double x = 2;
+    printf("x = %.2lf, eq1(x) = %.2lf\n", x, polyCalc(eq1, x));
+
+    sumEq = polyAdd(eq1, eq2);
+    printf("eq1 + eq2 = ");
+    polyPrint(sumEq);
+
+    multEq = polyMult(eq1, eq2);
+    printf("eq1 x eq2 = "); polyPrint(multEq);
+
+    listFree(eq1);
+    listFree(eq2);
+    listFree(sumEq);
+    listFree(multEq);
+    return 0;
+}
+```
+## 간략한 설명
+> ![](https://imgur.com/55kZQu8.jpg)
+> 본 문제에서 사용한 연결리스트는 이렇게 생겼다.
+
+---
+
+### polyAppend() 함수
+![](https://imgur.com/gQ8snnG.jpg)
+1. 입력받은 계수, 지수를 통해 새 노드를 일단 만든다.
+    > 얘는 이미 다음 노드가 NULL을 향해있다.
+2. 노드를 탐색해 나가며 마지막 노드를 찾는다
+3. 마지막 노드가 새로 만든 노드를 향하게 해준다.
+4. ???
+5. PROFIT!!
+> 위 문제에서는 만약에 빈 리스트라면 그냥 탐색없이 헤더가 바로 새 노드를 향하게끔 구현해 놓았다.
+
+연결리스트를 구현하면 `Node* currentNode` 등의 표현으로 현재 위치를 알려주는 거를 만들어 사용한다. 마치 파일탐색기에서 방향키를 통해 폴더나 파일을 고르면 골라진 파일에 하이라이트가 되는 그런 느낌이다(?)
+
+---
+
+### polyAdd() 함수
+다항식을 더할 때에는 차수가 같은거 끼리 더하는건 다들 알고 있을것이다.
+다항식 두개를 매개변수로 쓰는 만큼 currentNode도 두개 만들어서 쓴다.
+> ![](https://imgur.com/lng48VK.jpg)
+> 그림이 조잡하지만 내가 잘 이해했기를 바란다...
+
+---
+
+### polyMult() 함수
+![](https://imgur.com/Pi5U6fD.jpg)
+
+다항식의 곱셈은
+1. 분배법칙으로 일단 나눈걸 각 항별로 계산해주고
+> 소스코드에서 해당 부분
+> ```cpp
+> int multCnt = polyA->next->exp + 1;
+> int coef, exp;
+> LinkedList* temp[multCnt];
+> LinkedList* result;
+> 
+> Node* curA = polyA->next;
+> Node* curB, *curTemp;
+> 
+> for (size_t i = 0; i < multCnt; ++i) {
+>     // 위 그림에서 분배법칙 이후 계산된 항을 담기위한 배열
+>     temp[i] = listCreate();       
+> 
+>     curB = polyB->next;
+>     curTemp = curB;       
+> 
+>     for (size_t j = 0; j < polyB->size; ++j) {
+>         coef = curA->coef * curTemp->coef;
+>         exp = curA->exp + curTemp->exp;
+>         polyAppend(temp[i], coef, exp);
+> 
+>         curTemp = curTemp->next;
+>         }
+>     curA = curA->next;
+>     }
+> ```
+2. 계산된 것들을 다 더해주면
+3. ???
+4. PROFIT!!
+
+`(3x + 2)(2x + 4)` 처럼 단순한 경우에는 2번 단계에서 `polyAdd()`를 한번만 호출하면 되지만, 그림의 아래부분처럼 여러개가 되버리는 경우에는 `polyAdd()`함수를 여러번 호출해야 한다. 하지만 앞에서부터 두개씩 묶어서 더해주면 문제없다.  
+
+> 소스코드에서의 해당 부분 : 
+> ```cpp
+>     result = temp[0];
+>     for (size_t i = 1; i < multCnt; ++i) {      // multCnt = 앞 항 개수
+>         result = polyAdd(result, temp[i]);
+>     }
+> 
+>     return result;
+> ```
