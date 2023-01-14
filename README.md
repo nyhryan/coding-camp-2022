@@ -1,6 +1,8 @@
-2291012 남윤혁  
-이 글은 편하게 깃허브에서도 읽어볼수 있습니다.  
-[깃허브 링크](https://github.com/nyhryan/coding-camp-2022)
+# 2023 동계프로그래밍 캠프 보고서 (2291012 남윤혁)
+
+> 이 글은 편하게 깃허브에서도 읽어볼수 있습니다.  
+> [깃허브 링크](https://github.com/nyhryan/coding-camp-2022)
+---
 
 # 코딩캠프 2023 첫날 (2023.01.09)
 오후에 c 언어 2단계 문제 조금 풀다가 저녁먹고 끝.  
@@ -399,10 +401,10 @@ int main() {
 \- 전치행렬의 예)  
 ```
 원본
-11
-22
-33
-44
+1 1
+2 2
+3 3
+4 4
 
 원본의 전치행렬
 1 2 3 4 
@@ -665,10 +667,10 @@ A, B, C, D, E 다섯개의 배열이 있고, 우리는 이 5개를 모두 곱했
 1,2,3,4,5 단계를 살펴보면 k값의 범위가 바로 행렬을 어디서 묶을 건지에 대한 범위인 것을 알 수 있다.  
 예를 들면 `ABCDE` 다섯개를 곱할 때면 묶을 수 있는 경우의 수가
 ```
-A (BCDE)   | k = 1
+ A  (BCDE) | k = 1
 (AB) (CDE) | k = 2
 (ABC) (DE) | k = 3
-(ABCD) E   | k = 4
+(ABCD)  E  | k = 4
 -> ∴ 1 ≤ k < 5
 1 = i 이고 5 = j 임을 알 수 있다.
 
@@ -1037,7 +1039,7 @@ void printArray2(int** arr) {
 정도 되시겠다. ~~그니깐 제발 편하게 arr[i][j] 쓰자~~
 
 # 코딩캠프 마지막 날
-오늘은 앞으로 다시 가서 도전해 볼 만한 문제들 풀다가 연결리스트로 마무리했다. (역시 C언어 2단계)
+오늘은 앞으로 다시 가서 도전해 볼 만한 문제들 풀다가 연결리스트로 마무리했다. (역시 C언어 2단계 문제를 풀었다.)
 
 # 55 : 동적할당을 이용하여, 단어 목록
 문제 : 입력 받을 단어의 개수를 먼저 받고, 그만큼 동적할당한다. 그리고 40문자 이내의 단어들을 입력받아, 단어들을 출력하고 그리고 그중에서 가장 짧은 단어와 긴 단어를 출력한다.
@@ -1080,6 +1082,7 @@ int main() {
     printf("How many words? : ");
     scanf("%d", &wordCnt);
 
+    // 2차원 배열 word에 단어들을 저장할 것임 -> 동적할당 하는 중
     char** word = (char**)malloc(wordCnt * sizeof(char*));
     for (size_t i = 0; i < wordCnt; ++i) {
         word[i] = (char*)calloc(MAX, sizeof(char));
@@ -1090,9 +1093,9 @@ int main() {
         printf("> %d) Enter %d words : ", i + 1, wordCnt);
         scanf("%s", inputWord);
         strcpy(word[i], inputWord);
-        // printf("\n");
     }
 
+    // 일단 가장 긴 단어, 작은 단어를 맨 처음 단어로 둠
     lenMax = strlen(word[0]);
     lenMin = strlen(word[0]);
 
@@ -1101,14 +1104,19 @@ int main() {
     int len;
     for (size_t i = 0; i < wordCnt; ++i) {
         len = strlen(word[i]);
+        
+        // 단어의 길이가 lenMax보다 길면 그 단어가 새로운 긴 단어 
         if (len >= lenMax) {
             lenMax = len;
             idxMax = i;
         }
+        // 마찬가지로 가장 짧은 단어를 찾으면 가장 짧은 단어 갱신
         if (len <= lenMin) {
             lenMin = len;
             idxMin = i;
         }
+
+        // 저장한 단어들 하나씩 출력
         printf("[%d] : %s\n", i, word[i]);
     }
     printf("\n> Longest Word : %s\n", word[idxMax]);
@@ -1134,25 +1142,32 @@ b[5] : 4 5 6 7 10
 
 void merge(int a[], int b[]) {
     int aCnt = 0, bCnt = 0;
+
+    // 인수로 받은 배열은 건들면 좀 그러니깐
+    // 포인터로 참조하자
     int* pa = a;
     int* pb = b;
+
     int c[10];
 
     for (size_t i = 0; i < 10; ++i) {
-        // a,b 중 한 쪽을 다 담기 전까지는
+        // a,b 중 한 쪽을 다 담기 전까지는 (aCnt, bCnt가 5가 되기 전에)
         // 둘 중 작은 값부터 차례로 c에 담음
         if (aCnt != 5 && bCnt != 5) {
+            // a[] 배열 요소가 작으면 얘를 넣고
             if (*pa < *pb) {
                 c[i] = *pa;
                 ++aCnt;
                 ++pa;
-            } else if (*pb <= *pa) {
+            }
+            // b[] 배열 요소가 작거나 같으면 얘를 c[]에 넣는다.
+            else {
                 c[i] = *pb;
                 ++bCnt;
                 ++pb;
             }
         }
-        // a, b 중 한쪽을 다 c에 담아서 끝난 경우
+        // a, b 중 한쪽을 다 c에 담아서 끝난 경우 (aCnt, bCnt 중 둘 중 하나가 5에 도달)
         // 나머지 배열의 나머지 요소들은 c에 차례로 담음
         else {
             if (aCnt == 5) {
@@ -1208,9 +1223,12 @@ Enter sentence : I love C Language!!
 #include <stdio.h>
 #define MAX 100
 
+// 문자 개수 세는 함수 (공백 포함)
 int countLetter(char* s) {
     int count = 0;
     char* pCount = s;
+
+    // NULL 문자 만나기 전까지 이동하면서 만나는 문자 하나 당 개수 +1
     while (*pCount != '\n') {
         ++count;
         ++pCount;
@@ -1219,14 +1237,19 @@ int countLetter(char* s) {
     return count;
 }
 
+// 단어 개수 세는 함수
 int countWord(char* s) {
     int count = 0;
     char* pCount = s;
 
+    // 문장이 공백으로 시작하지 않으면
+    // 단어 개수 = 공백 개수 + 1이므로 처음에 하나를 더해서 단어 개수를 세준다
     if (*s != ' ') {
         ++count;
     }
 
+    // 공백 개수만큼 단어 개수가 올라가니깐 문자열이 공백으로 시작하면
+    // 이쁘게 공백 개수만큼 단어 개수가 세어진다.
     while (*pCount != '\0') {
         if (*pCount == ' ') {
             ++count;
@@ -1301,8 +1324,8 @@ void reverse(char* s) {
 
     // ex) I Love You\n
     //     01000010001
-    // 위의 배열에서 처음으로 발견한 지점에서 "10"이 붙어 있으면 거기부터
-    // 다음 1 나올때까지 한 단어 출력
+    // for문 i : 뒤에서 앞으로 이동하면서, 위의 배열에서 "10"이 붙어 있으면(Love, You 사이) 거기부터
+    // while문 j : 다음 1 나올때까지 반대로 뒤로 이동하면서 한 단어 출력
     // 이렇게 역순으로 진행하고
     // 맨 처음 단어같은 경우 두번째 if문의 조건으로 걸러서 첫 단어도 출력하게함
 
@@ -1478,6 +1501,7 @@ int main() {
 
     // feof(): 파일 끝에 도착함 = nonzero 리턴
     //         아직 안 도착함   = 0 리턴
+    //          -> while문을 도는 조건, fp가 아직 마지막에 도착하지 않았으면 ... 루프 ...
     while (!feof(fp)) {
         Student s;
         fscanf(fp, "%d %s %f %f", &s.idx, s.name, &s.score1, &s.score2);
@@ -1495,7 +1519,7 @@ int main() {
 
 문제 : 연결리스트를 구현하고 30개의 난수를 리스트에 넣어 합계와 평균을 계산해라
 
-출력 : 
+출력 (너무 길어서 10개만 담았다) : 
 ```
 HEAD - 79 - 13 - 61 - 70 - 23 - 4 - 50 - 35 - 32 - 93 - TAIL
 Sum : 460 Avg : 46.0
@@ -1509,15 +1533,16 @@ Sum : 460 Avg : 46.0
 #include <stdlib.h>
 #include <time.h>
 
-#define MAX 10
+#define MAX 30
 
 typedef struct _Node {
         int data;               // 리스트의 각 노드가 가진 데이터
         struct _Node* next;     // 다음 노드를 가르키는 부분
 } Node;
 
-// appends at the last node : 맨 뒤에 새로운 노드를 추가한다
+// 맨 뒤에 새로운 노드를 추가한다
 void listAppend(Node* list, int data) {
+
     // 인수로 받은 리스트를 참조, 현위치를 나타내는 노드 포인터
     Node* current = list;
 
@@ -1684,9 +1709,12 @@ void polyAppend(LinkedList* list, int coef, int exp) {
     newNode->exp = exp;
     newNode->next = NULL;
 
+    // 빈 리스트라면 새 노드를 헤더 다음에 바로 연결
     if (list->next == NULL) {
         list->next = newNode;
-    } else {
+    }
+    // 아니면 맨 뒤까지 탐색을 해 나가서 거기에 새 노드 연결
+    else {
         Node* cur = list->next;
 
         while (cur->next != NULL) {
